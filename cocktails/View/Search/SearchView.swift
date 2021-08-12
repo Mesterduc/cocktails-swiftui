@@ -85,9 +85,6 @@ struct SearchView: View {
         }
         .padding(.horizontal, 10)
         .navigationTitle("Find Cocktail")
-        //        .onAppear(perform: {
-        //            viewModel.fetchCocktailList()
-        //        })
     }
 }
 

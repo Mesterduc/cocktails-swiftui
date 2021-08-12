@@ -33,7 +33,6 @@ struct cocktailsApp: App {
                     }
                 
                 ProfileView()
-                    
                     .tabItem {
                         Label("Profile", systemImage: "person.circle.fill")
                     }

@@ -2,19 +2,10 @@
 //  ProfileView.swift
 //  cocktails
 //
-//  Created by Duc hong cai on 20/07/2021.
+//  Created by Duc hong cai on 11/08/2021.
 //
 
 import SwiftUI
-
-struct ProfileView: View {
-    var body: some View {
-        NavigationView{
-        Home()
-        .navigationTitle("Profile")
-        }
-    }
-}
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
@@ -22,87 +13,97 @@ struct ProfileView_Previews: PreviewProvider {
     }
 }
 
+struct ProfileView: View {
+    @StateObject var viewModel = ProfileViewModel()
+    var body: some View {
+        ZStack{
+            VStack(spacing: 15){
+                // loginpage header text
+                welcomeText()
+                
+                // loginpage icon image
+                loginImage()
+                
+                // Loginpage form
+                loginForm(viewModel: viewModel)
+            }
+        }
+        // background
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
+        .background(
+            LinearGradient(gradient: Gradient(colors: [.orange, .purple]), startPoint: .top, endPoint: .bottom)
+        )
+        .edgesIgnoringSafeArea(.all)
+    }
+}
 
-struct Home: View {
+struct welcomeText: View {
+    var body: some View {
+        Text("Welcome to Cocktail")
+            .font(.largeTitle.weight(.semibold))
+            .padding(15)
+            .foregroundColor(.blue)
+    }
+}
+
+struct loginImage: View {
+    var body: some View {
+        Image("Cocktail_Icon")
+            .resizable()
+            .clipShape(Capsule())
+            .aspectRatio(contentMode: .fill)
+            .frame(width: 200, height: 200)
+            .padding(10)
+            .background(Color.orange)
+            .clipShape(Capsule())
+            .padding(.bottom, 50)
+            .padding()
+    }
+}
+
+struct loginForm: View {
+    @ObservedObject var viewModel: ProfileViewModel
     
-    @State var scrollViewOffset:  CGFloat = 0
-    
-    
-    // getting start offset and elimination from Current  offset so what we will get exact offset...
-    @State var startOffset:  CGFloat = 0
+    @State var ShakesUsername: CGFloat = 0
+    @State var ShakesPassword: CGFloat = 0
     
     var body: some View {
-        ScrollViewReader { proxyReader in
-            ScrollView(.vertical, showsIndicators: false, content: {
-                VStack(spacing: 25){
-                    ForEach(1...30, id: \.self){ index in
-                        HStack(spacing:15){
-                            Circle()
-                                .fill(Color.gray.opacity(0.5))
-                                .frame(width:60,  height:60)
-                            
-                            VStack(alignment: .leading, spacing: 8, content: {
-                                
-                              RoundedRectangle(cornerRadius: 4)
-                                .fill(Color.gray.opacity(0.5))
-                                .frame(height: 22)
-                                
-                                RoundedRectangle(cornerRadius: 4)
-                                    .fill(Color.gray.opacity(0.5))
-                                    .frame(height: 22)
-                                    .padding(.trailing,  100)
-                            })
-                        }
-                    }
-                }
+        VStack(alignment: .leading, spacing: 15){
+            TextField("Email", text: $viewModel.username)
                 .padding()
-                .id("SCROLL_TO_TOP")
-                // getting scrollview offset
-                .overlay(
-                    // Using GeometryReader to get scrollview  offset
-                    GeometryReader{  geo -> Color in
-                        
-                        DispatchQueue.main.async {
-                            if startOffset == 0 {
-                                self.startOffset = geo.frame(in: .global).minY
-                            }
-                            
-                            let offset = geo.frame(in: .global).minY
-                            self.scrollViewOffset = -offset + startOffset
-                        }
-                        return Color.clear
-                    }
-                    .frame(width: 0, height: 0)
-                    
-                )
-            })
-            //if offset goes less than 450 then showing floating action button
-            .overlay(
-                
-                Button(action: {
-                    withAnimation(.spring()) {
-                        proxyReader.scrollTo("SCROLL_TO_TOP", anchor: .top)
-                    }
-                }, label: {
-                    Image(systemName: "arrow.up")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.red)
-                        .clipShape(Circle())
-                        .shadow(color: .black.opacity(0.09), radius: 5, x: 5, y: 5)
-                })
-                .padding(.trailing)
-//                .padding(.bottom, getSafeArea().bottom == 0 ? 12 : 0)
-                .opacity(-scrollViewOffset > 450 ? 1 : 0)
-                .animation(.easeInOut)
-                
-                
-                // fixing at bottom right
-                ,alignment: .bottomTrailing
-                    
-            )
+                .background(Color.white)
+                .cornerRadius(20)
+                .modifier(ShakeEffect(shakeNumber: ShakesUsername))
+            
+            SecureField("Password", text: $viewModel.password)
+                .padding()
+                .background(Color.white)
+                .cornerRadius(20)
+                .modifier(ShakeEffect(shakeNumber: ShakesPassword))
+            
         }
-        .navigationTitle("Profile \(String(format: "%.2f", scrollViewOffset))")
+        .padding(.horizontal, 25)
+        .padding(.bottom, 25)
+        
+        Button(action: {
+            if !viewModel.validateUsername() {
+                withAnimation(.default) {
+                    self.ShakesUsername += 5
+                }
+            }
+            if !viewModel.validatePassword() {
+                withAnimation(.default) {
+                    self.ShakesPassword += 5
+                }
+            }
+        }, label: {
+            Text("Sign In")
+                .padding()
+                .frame(width: 300, height: 50)
+                .background(Color.green)
+                .cornerRadius(20)
+                .foregroundColor(.white)
+                .font(.title2.weight(.semibold))
+        })
     }
 }
