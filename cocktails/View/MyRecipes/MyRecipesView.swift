@@ -24,7 +24,6 @@ struct MyRecipesView: View {
             if recipes.isEmpty() {
                 Text("No Cocktails is saved")
             } else {
-                
                 LazyVStack(alignment: .leading, spacing: 15) {
                     ForEach(recipes.getRecipes(), id:\.self){ drink in
                         //                        Text(drink.strCategory)
@@ -44,7 +43,7 @@ struct MyRecipesView: View {
                                             .font(.subheadline)
                                     }
                                 }
-                                .padding()
+                                .padding(.horizontal, 10)
                                 .foregroundColor(.black)
                                 .opacity(0.8)
                                 

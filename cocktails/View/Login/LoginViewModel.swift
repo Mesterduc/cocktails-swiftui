@@ -8,9 +8,10 @@
 import Foundation
 import SwiftUI
 
-class ProfileViewModel: ObservableObject {
+class LoginViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var password: String = ""
+    @Published var loggedIn: Bool = false
     
     func validateUsername() -> Bool {
         let user: String = "Hong"

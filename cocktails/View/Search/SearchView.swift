@@ -13,36 +13,38 @@ struct SearchView_Previews: PreviewProvider {
 }
 
 struct SearchView: View {
-    @State private var hidden = false
-    
     @StateObject var viewModel = SearchViewModel()
+    
+    @State private var clearButton = false
+    @State private var hidden = false
+    @State private var cocktailName: String = ""
     
     var body: some View {
         VStack{
+            //search field
             VStack(alignment: .leading){
-                Text("Inserted cocktail name: \(viewModel.cocktailName)")
-                //search field
+                Text("Inserted cocktail name: \(self.cocktailName)")
                 HStack{
                     Image(systemName: "magnifyingglass")
                         .padding()
                         .foregroundColor(.black.opacity(0.4))
-                    TextField("Cocktail name....", text: $viewModel.cocktailName)
-                        .onChange(of: viewModel.cocktailName, perform: { value in
-                            if !viewModel.cocktailName.isEmpty {
-                                self.hidden = false
+                    TextField("Cocktail name....", text: self.$cocktailName)
+                        .onChange(of: self.cocktailName, perform: { value in
+                            if !self.cocktailName.isEmpty {
+                                self.clearButton = true
                             }
-                            viewModel.fetchCocktailList()
+                            viewModel.fetchCocktailList(drink: self.cocktailName)
                         })
                     Button(action:
                             {
-                                viewModel.cocktailName = ""
-                                self.hidden = false
+                                self.cocktailName = ""
+                                self.clearButton = false
                             })
                     {
                         Text("Clear")
                     }
                     .padding(.trailing, 8)
-                    .opacity(hidden ? 1 : 0)
+                    .opacity(clearButton ? 1 : 0)
                     .animation(.easeInOut)
                     
                 }
@@ -59,27 +61,20 @@ struct SearchView: View {
                     .font(.title.bold())
                 ForEach(viewModel.cocktailList, id:\.idDrink) { cocktail in
                     Text(cocktail.strDrink)
-                    //                    .animation(.easeInOut(duration: 2))
                 }
                 .opacity(hidden ? 1 : 0)
-//                .scaleEffect(hidden ? 1.5 : 0)
+                .animation(.linear)
             }
             
-            .onChange(of: viewModel.cocktailList, perform: { value in
-                withAnimation(.spring(response: 2, dampingFraction: 1, blendDuration: 0.5)){
-                                    self.hidden = true
-                                }
-//                withAnimation(.linear(duration: 2)){
-//                    self.hidden = true
-//                }
+            .onChange(of: cocktailName, perform: { value in
+                withAnimation(.easeInOut(duration: 2)){
+                    self.hidden = true
+                }
             })
             .onAppear(perform: {
-                                withAnimation(.spring(response: 0.4, dampingFraction: 0.2, blendDuration: 0)){
-                                    self.hidden = true
-                                }
-//                withAnimation(.linear(duration: 2)){
-//                    self.hidden = true
-//                }
+                withAnimation(.easeInOut(duration: 2)){
+                    self.hidden = true
+                }
             })
             Spacer()
         }

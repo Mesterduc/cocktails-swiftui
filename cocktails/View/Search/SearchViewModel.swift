@@ -9,10 +9,13 @@ import Foundation
 
 class SearchViewModel: ObservableObject {
     @Published var cocktailList: [Drink.Cocktail] = []
-    @Published var cocktailName: String = ""
     
-    func fetchCocktailList() {
-        fetchCocktails(drink: cocktailName) { drinks in
+    init() {
+            fetchCocktailList(drink: "Mojito")
+    }
+    
+    func fetchCocktailList(drink: String) {
+        fetchCocktails(drink: drink) { drinks in
             DispatchQueue.main.async {
                 self.cocktailList = drinks
             }

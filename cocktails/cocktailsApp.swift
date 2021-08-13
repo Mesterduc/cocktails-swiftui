@@ -11,6 +11,7 @@ import SwiftUI
 struct cocktailsApp: App {
     @StateObject var viewModel = ContentViewModel()
     @ObservedObject var recipes = MyRecipes()
+    @ObservedObject var user = LoginViewModel()
     var body: some Scene {
         WindowGroup {
             TabView{
@@ -32,13 +33,14 @@ struct cocktailsApp: App {
                         Label("Search", systemImage: "magnifyingglass")
                     }
                 
-                ProfileView()
+                Profile2View()
                     .tabItem {
                         Label("Profile", systemImage: "person.circle.fill")
                     }
                 
             }
             .environmentObject(recipes)
+            .environmentObject(user)
         }
     }
 }

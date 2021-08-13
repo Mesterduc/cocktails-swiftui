@@ -11,12 +11,12 @@ import SwiftUI
 struct ScrollViewTitleModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.title.bold())
+            .font(.title2.bold())
 //            .padding([.leading, .top, .trailing])
 //            .padding(.bottom, -1)
             .padding(.horizontal, 10)
             .padding(.vertical,  0)
-            .frame(width: UIScreen.main.bounds.size.width, alignment: .leading)
+            .frame(width: UIScreen.main.bounds.size.width, height: 30 , alignment: .leading)
     }
 }
 
