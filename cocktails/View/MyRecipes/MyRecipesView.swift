@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct MyRecipesView_Previews: PreviewProvider {
     static var recipes = MyRecipes()
@@ -26,12 +27,11 @@ struct MyRecipesView: View {
             } else {
                 LazyVStack(alignment: .leading, spacing: 15) {
                     ForEach(recipes.getRecipes(), id:\.self){ drink in
-                        //                        Text(drink.strCategory)
                         NavigationLink(
                             destination: CocktailView(item: drink),
                             label: {
                                 HStack(spacing: 15){
-                                    Image("photo2")
+                                    WebImage(url: URL(string: "\(drink.strDrinkThumb)"))
                                         .resizable()
                                         .frame(width: 60, height: 60)
                                         .cornerRadius(10)

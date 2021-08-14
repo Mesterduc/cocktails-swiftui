@@ -5,8 +5,9 @@
 //  Created by Duc hong cai on 04/08/2021.
 //
 
-import Foundation
 import SwiftUI
+// used for handling image of api
+import SDWebImageSwiftUI
 
 struct ScrollViewTemplete_Previews: PreviewProvider {
     
@@ -19,9 +20,6 @@ struct ScrollViewTemplete_Previews: PreviewProvider {
 }
 
 struct ScrollViewTemplete: View {
-    //    slet
-//    @ObservedObject var viewModel: ContentViewModel
-    //
     
     var list: [Drink.Cocktail]
     let title: String
@@ -29,9 +27,9 @@ struct ScrollViewTemplete: View {
     init(list: [Drink.Cocktail], title: String){
         self.list = list
         self.title = title
-        //            self.content = contentBuilder()
     }
     var body: some View {
+        // category tittle and see all button
         HStack{
             Text(title)
                 .font(.title2.bold())
@@ -43,20 +41,25 @@ struct ScrollViewTemplete: View {
                     .font(.system(size: 18))
                     .background(Color.blue.opacity(0.2))
                     .cornerRadius(10)
-//            }
             }
         }
         .padding(.horizontal, 15)
+        
+        // the scrollview
         ScrollView(.horizontal, showsIndicators: false){
             HStack{
+                // foreach on the passed list
                 ForEach(list, id:\.idDrink){ drink in
+                    // all items is a link to its own cocktail page
                     NavigationLink(destination: CocktailView(item: drink)) {
+                        // the cocktail card
                         VStack{
-                            Image("cocktail")
+                            // card image
+                            WebImage(url: URL(string: "\(drink.strDrinkThumb)"))
+                                .resizable()
                                 .frame(width: 200, height: 150)
-                                .scaledToFit()
                                 .cornerRadius(20, corners: [.topLeft , .topRight])
-                            
+                            // card text
                             VStack{
                                 Text(drink.strDrink)
                                     .font(.title3.bold())

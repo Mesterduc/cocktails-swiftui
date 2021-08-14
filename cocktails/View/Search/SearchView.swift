@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
+
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView()
@@ -20,7 +22,7 @@ struct SearchView: View {
     @State private var cocktailName: String = ""
     
     var body: some View {
-        VStack{
+        VStack(alignment: .leading){
             //search field
             VStack(alignment: .leading){
                 Text("Inserted cocktail name: \(self.cocktailName)")
@@ -57,14 +59,44 @@ struct SearchView: View {
             
             // results
             VStack(alignment:.center){
-                Text("Cocktails")
-                    .font(.title.bold())
-                ForEach(viewModel.cocktailList, id:\.idDrink) { cocktail in
-                    Text(cocktail.strDrink)
+            Text("Cocktails")
+                .font(.title.bold())
+            }
+                
+//                ForEach(viewModel.cocktailList, id:\.idDrink) { cocktail in
+//                    Text(cocktail.strDrink)
+//                }
+            ScrollView(.vertical){
+                VStack(alignment: .leading){
+                ForEach(viewModel.cocktailList, id:\.self){ drink in
+                    NavigationLink(
+                        destination: CocktailView(item: drink),
+                        label: {
+                            HStack(spacing: 15){
+                                WebImage(url: URL(string: "\(drink.strDrinkThumb)"))
+                                    .resizable()
+                                    .frame(width: 60, height: 60)
+                                    .cornerRadius(10)
+                                    .shadow(radius: 5)
+                                VStack(alignment: .leading, spacing: 5){
+                                    Text(drink.strDrink)
+                                        .font(.headline)
+                                    Text(drink.strCategory)
+                                        .font(.subheadline)
+                                }
+                            }
+                            .padding(.horizontal, 10)
+                            .foregroundColor(.black)
+                            .opacity(0.8)
+                            
+                        })
+                    
                 }
                 .opacity(hidden ? 1 : 0)
                 .animation(.linear)
+                }
             }
+            
             
             .onChange(of: cocktailName, perform: { value in
                 withAnimation(.easeInOut(duration: 2)){

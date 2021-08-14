@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct CocktailView_Previews: PreviewProvider {
     static var recipes = MyRecipes()
@@ -28,15 +29,17 @@ struct CocktailView: View {
     
     var body: some View {
             ScrollView(.vertical){
-                
+                //Hero image
                 GeometryReader{  geometry  in
                     if geometry.frame(in: .global).minY <= 0 {
-                        Image("photo2").resizable()
+                        WebImage(url: URL(string: "\(item.strDrinkThumb)"))
+                            .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: geometry.size.width,
                                    height: geometry.size.height)
                     } else {
-                        Image("photo2").resizable()
+                        WebImage(url: URL(string: "\(item.strDrinkThumb)"))
+                            .resizable()
                             .aspectRatio(contentMode: .fill)
                             .offset(y: -geometry.frame(in: .global).minY)
                             .frame(width: geometry.size.width,
@@ -44,13 +47,13 @@ struct CocktailView: View {
                                     geometry.frame(in: .global).minY)
                     }
                 }
-                .frame(height:  300)
+                .frame(height:  350)
                 
+                // Product Name
                 Text("\(item.strDrink)")
-                    .font(.largeTitle)
-                    .bold()
-                
-                
+                    .font(.largeTitle.bold())
+                    .padding()
+                    
                 
                 VStack(alignment: .leading){
                     ScrollView(.horizontal, showsIndicators: false){
@@ -66,32 +69,24 @@ struct CocktailView: View {
                             
                             Text(item.strCategory)
                                 .TagModifier(color: Color.red)
-                            Text(item.strAlcoholic)
-                                .TagModifier(color: Color.blue)
                             
                         }
                     }
+                    // Instriction
                     Group{
                         Text("Instruction")
-                            .bold()
-                            .font(.title3)
+                            .font(.title3.bold())
                             .padding(.top, 5)
-                        Text(item.strInstructions)
-                            .fixedSize(horizontal: false, vertical: true)
-                        //                        .lineLimit(nil)
-                        Text(item.strInstructions)
-                            .fixedSize(horizontal: false, vertical: true)
                         Text(item.strInstructions)
                             .fixedSize(horizontal: false, vertical: true)
                         
                         
                     }
+                    // ingredients
                     Group{
                         Text("Ingredients")
-                            .bold()
-                            .font(.title3)
+                            .font(.title3.bold())
                             .padding(.top, 5)
-                        //                    List {
                         
                         Text("\(item.strIngredient1): \(item.strMeasure1)")
                         if let ingredient = item.strIngredient2, let measure = item.strMeasure2  {
@@ -106,21 +101,12 @@ struct CocktailView: View {
                         if let ingredient = item.strIngredient5, let measure = item.strMeasure5  {
                             Text("\(ingredient): \(measure)")
                         }
-                        Text("\(item.strIngredient1): \(item.strMeasure1)")
-                        Text("\(item.strIngredient1): \(item.strMeasure1)")
-                        Text("\(item.strIngredient1): \(item.strMeasure1)")
-                        Text("\(item.strIngredient1): \(item.strMeasure1)")
-                        //                    }
                     }
                     .padding(.bottom, 2)
                     
                 }
                 .padding(.horizontal, 10)
                 Spacer()
-               
-                    //                .navigationBarTitle(item.strDrink, displayMode: .inline)
-                    //                .navigationBarHidden(true)
-                    //                .navigationBarTitle(item.strDrink)
                     .modifier(TopBar(showBar: $showBar))
                 
                 // Custom back button
@@ -131,20 +117,12 @@ struct CocktailView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing){
                     Button {
-//                        if self.recipes.contains(self.item) {
-//                                self.recipes.remove(self.item)
-//                            } else {
-//                                self.recipes.add(self.item)
-//                            }
                         if self.star {
                             self.star = false
                         } else {
                             self.star = true
                         }
-                        
-//                        self.star = self.star == "star" ? "star.fill" : "star"
                     } label: {
-//                        Text(self.star ? "Remove from Favorites" : "Add to Favorites")
                         Image(systemName: self.star ? "star.fill" : "star")
                     }
                 }
