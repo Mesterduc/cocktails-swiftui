@@ -24,6 +24,7 @@ struct Profile2View_Previews: PreviewProvider {
 
 
 struct Home: View {
+    @EnvironmentObject var user: LoginViewModel
     
     @State var scrollViewOffset:  CGFloat = 0
     
@@ -103,6 +104,16 @@ struct Home: View {
                     
             )
         }
+        
+        // makes the login page appear when scrollview appears
+        .onAppear(perform: {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//                withAnimation(.easeInOut(duration: 2)) {
+
+                    user.loggedIn = true
+//                }
+//                    }
+        })
         .navigationTitle("Profile \(String(format: "%.2f", scrollViewOffset))")
     }
 }

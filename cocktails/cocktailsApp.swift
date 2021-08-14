@@ -14,6 +14,7 @@ struct cocktailsApp: App {
     @ObservedObject var user = LoginViewModel()
     var body: some Scene {
         WindowGroup {
+            //            ZStack{
             TabView{
                 NavigationView{
                     
@@ -37,8 +38,21 @@ struct cocktailsApp: App {
                     .tabItem {
                         Label("Profile", systemImage: "person.circle.fill")
                     }
-                
             }
+            .overlay(
+                GeometryReader{ geo in
+                    ZStack{
+                        LoginView()
+                    }
+                    .position(CGPoint(x: geo.frame(in: .global).midX, y: user.loggedIn ? geo.frame(in: .global).midY : -geo.frame(in: .global).midY - 50 ))
+                    .edgesIgnoringSafeArea(.all)
+                    .zIndex(2)
+                    
+                }
+                .animation(.easeInOut(duration: 1))
+            )
+            //                }
+            //            }
             .environmentObject(recipes)
             .environmentObject(user)
         }

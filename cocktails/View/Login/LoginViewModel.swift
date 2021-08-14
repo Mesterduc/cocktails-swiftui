@@ -11,7 +11,7 @@ import SwiftUI
 class LoginViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var password: String = ""
-    @Published var loggedIn: Bool = false
+    @Published var loggedIn: Bool = true
     
     func validateUsername() -> Bool {
         let user: String = "Hong"
